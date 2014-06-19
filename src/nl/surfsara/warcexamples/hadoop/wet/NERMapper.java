@@ -16,6 +16,8 @@
 package nl.surfsara.warcexamples.hadoop.wet;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -25,6 +27,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 import org.jwat.common.Payload;
 import org.jwat.warc.WarcRecord;
+import com.google.common.net.InternetDomainName;
 
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
@@ -73,6 +76,18 @@ class NERMapper extends Mapper<LongWritable, WarcRecord, Text, Text> {
 			if (payload == null) {
 				// NOP
 			} else {
+				
+				// BIG TEMP BLOCK
+				String url = "";
+				try {
+					url = new URI("http://utwente.nl/").getHost();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				InternetDomainName tmp = InternetDomainName.from(url);
+				// this actually seems to work =D
+				
 				if (numrecords < MAX_RECORDS) {
 					String warcContent = IOUtils.toString(payload.getInputStreamComplete());
 					if (warcContent == null && "".equals(warcContent)) {

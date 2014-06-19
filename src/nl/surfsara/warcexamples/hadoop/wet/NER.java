@@ -40,7 +40,7 @@ public class NER extends Configured implements Tool {
 		Configuration conf = this.getConf();
 
 		Job job = Job.getInstance(conf, "Name entities");
-		job.setJarByClass(NER.class);
+		job.setJarByClass(NER.class);  
 
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
