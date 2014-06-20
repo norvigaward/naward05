@@ -15,7 +15,9 @@
  */
 package nl.surfsara.warcexamples.hadoop.rr;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,30 +65,60 @@ class RRMapper extends Mapper<LongWritable, WarcRecord, Text, LongWritable> {
 		MapDictionary<String> dictionary = new MapDictionary<String>();
 		
 	    String song = "";  
-	     
-        Scanner sc = new Scanner(RRMapper.class.getResourceAsStream("/nl/surfsara/warcexamples/hadoop/rr/resources/recordartists.txt"));
-        
-        while (sc.hasNextLine() ) {
-            String line = sc.nextLine();
-            String[] splitLine= line.split(";",2);
+	    String line = "";
+	    
+	    //TODO Instellen.
+	    String recordArtistListURL = "";
+	    
+	    ///////////////////////////////////////////////////////////////////
+	    /// Dit stuk gebruikt top 2000 lijst om recognizer te bouwen.
+	    //////////////////////////////////////////////////////////////////
+//        Scanner sc = new Scanner(RRMapper.class.getResourceAsStream("/nl/surfsara/warcexamples/hadoop/rr/resources/recordartists.txt"));
+//        
+//        while (sc.hasNextLine() ) {
+//            String line = sc.nextLine();
+//            String[] splitLine= line.split(";",2);
+//            //TODO: Does limiting the song size increase the size of buildup?
+//            song = splitLine[0].trim();
+//            song = song.substring(0, Math.min(song.length(), 200));
+//            
+//            if(song.length()>1 && !songMap.containsKey(song)){
+//            	
+//            	// Add the song to dictionary
+//	            dictionary.addEntry(new DictionaryEntry<String>(song,song));
+//	            
+//	            // Add the song + all the artists in a hashmap
+//	        	songMap.put(song, splitLine[1].split("\t"));
+//            }
+//             
+//        }
+//        sc.close();
+	    
+	    ///////////////////////////////////////////////////////////////////
+	    /// Dit stuk kan werkelijke lijst inlezen.
+	    //////////////////////////////////////////////////////////////////
+	    
+	    // TODO: uitzoeken hoe we bij bestand op SURFSara kunnen komen
+	    BufferedReader input = new BufferedReader(new FileReader(recordArtistListURL));
+	    
+        while (null != (line = input.readLine())) {
+            String[] splitLine= line.split("\t",2);
             //TODO: Does limiting the song size increase the size of buildup?
-            song = splitLine[0].trim();
+            song = splitLine[0];
             song = song.substring(0, Math.min(song.length(), 200));
-            
-            if(song.length()>1 && !songMap.containsKey(song)){
+            if(song.length()>1){
             	
-            	// Add the song to dictionary
-	            dictionary.addEntry(new DictionaryEntry<String>(song,song));
+	            dictionary.addEntry(new DictionaryEntry<String>(song,""));
 	            
-	            // Add the song + all the artists in a hashmap
 	        	songMap.put(song, splitLine[1].split("\t"));
-            }
-             
+            }    
         }
-        sc.close();
+        input.close();
         
+
         logger.info("Dictionary build-up completed");
         
+        // No substring matching and capital insensitive
 	    dictionaryChunkerFT = new ExactDictionaryChunker(dictionary,
                                      IndoEuropeanTokenizerFactory.INSTANCE,
                                      false,false);
