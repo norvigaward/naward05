@@ -17,6 +17,8 @@ package nl.surfsara.warcexamples;
 
 import java.util.Arrays;
 
+import nl.naward04.hadoop.country.Country;
+import nl.naward05.hadoop.country.CountCountries;
 import nl.surfsara.warcexamples.hadoop.ldps.LDPS;
 import nl.surfsara.warcexamples.hadoop.rr.RR;
 import nl.surfsara.warcexamples.hadoop.warc.Hrefs;
@@ -34,7 +36,14 @@ import org.apache.hadoop.util.ToolRunner;
  */
 public class Main {
 	public enum Programs {
-		NER("ner", "Perform named entity recognition on wet (extracted text) files."), LDPS("ldps", "Perform langauge detection on wet (extracted text) files."), RR("rr", "Record recognizer."), SERVERTYPE("servertype", "Extract server type from wat (metadata) files."), HREF("href", "Extract links from http responses in warc (full crawl output) files."), HEADERS("headers", "Dumps all headers from a file (this is not a mapreduce job).");
+		NER("ner", "Perform named entity recognition on wet (extracted text) files."),
+		LDPS("ldps", "Perform langauge detection on wet (extracted text) files."),
+		RR("rr", "Record recognizer."),
+		COUNTRY("country", "Country recognizer."),
+		COUNTCOUNTRIES("countcountries", "Country counter."),
+		SERVERTYPE("servertype", "Extract server type from wat (metadata) files."),
+		HREF("href", "Extract links from http responses in warc (full crawl output) files."),
+		HEADERS("headers", "Dumps all headers from a file (this is not a mapreduce job).");
 
 		private final String name;
 		private final String description;
@@ -69,6 +78,10 @@ public class Main {
 				retval = ToolRunner.run(new Configuration(), new LDPS(), toolArgs);
 			} else if (Programs.RR.getName().equals(tool)) {
 				retval = ToolRunner.run(new Configuration(), new RR(), toolArgs);
+			} else if (Programs.COUNTRY.getName().equals(tool)) {
+				retval = ToolRunner.run(new Configuration(), new Country(), toolArgs);
+			} else if (Programs.COUNTCOUNTRIES.getName().equals(tool)) {
+				retval = ToolRunner.run(new Configuration(), new CountCountries(), toolArgs);
 			} else if (Programs.SERVERTYPE.getName().equals(tool)) {
 				retval = ToolRunner.run(new Configuration(), new ServerType(), toolArgs);
 			} else if (Programs.HREF.getName().equals(tool)) {
