@@ -16,14 +16,13 @@
 package nl.surfsara.warcexamples.hadoop.rr;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import com.aliasi.chunk.Chunk;
 import com.aliasi.chunk.Chunking;
@@ -67,54 +66,24 @@ class RRMapper extends Mapper<LongWritable, WarcRecord, Text, LongWritable> {
 	    String song = "";  
 	    String line = "";
 	    
-	    //TODO Instellen.
-	    String recordArtistListURL = "";
-	    
-	    ///////////////////////////////////////////////////////////////////
-	    /// Dit stuk gebruikt top 2000 lijst om recognizer te bouwen.
-	    //////////////////////////////////////////////////////////////////
-//        Scanner sc = new Scanner(RRMapper.class.getResourceAsStream("/nl/surfsara/warcexamples/hadoop/rr/resources/recordartists.txt"));
-//        
-//        while (sc.hasNextLine() ) {
-//            String line = sc.nextLine();
-//            String[] splitLine= line.split(";",2);
-//            //TODO: Does limiting the song size increase the size of buildup?
-//            song = splitLine[0].trim();
-//            song = song.substring(0, Math.min(song.length(), 200));
-//            
-//            if(song.length()>1 && !songMap.containsKey(song)){
-//            	
-//            	// Add the song to dictionary
-//	            dictionary.addEntry(new DictionaryEntry<String>(song,song));
-//	            
-//	            // Add the song + all the artists in a hashmap
-//	        	songMap.put(song, splitLine[1].split("\t"));
-//            }
-//             
-//        }
-//        sc.close();
-	    
-	    ///////////////////////////////////////////////////////////////////
-	    /// Dit stuk kan werkelijke lijst inlezen.
-	    //////////////////////////////////////////////////////////////////
-	    
-	    // TODO: uitzoeken hoe we bij bestand op SURFSara kunnen komen
-	    BufferedReader input = new BufferedReader(new FileReader(recordArtistListURL));
+	    String recordArtistListURL = "/nl/surfsara/warcexamples/hadoop/rr/resources/recording-artist-zonder-haakjes.txt";
+
+	    BufferedReader input = new BufferedReader(new InputStreamReader(RRMapper.class.getResourceAsStream(recordArtistListURL)));
 	    
         while (null != (line = input.readLine())) {
             String[] splitLine= line.split("\t",2);
-            //TODO: Does limiting the song size increase the size of buildup?
             song = splitLine[0];
             song = song.substring(0, Math.min(song.length(), 200));
-            if(song.length()>1){
+            if(song.length()>2){
             	
-	            dictionary.addEntry(new DictionaryEntry<String>(song,""));
+	            dictionary.addEntry(new DictionaryEntry<String>(song.toLowerCase(),""));
+            	String[] artists = splitLine[1].split("\t");
 	            
-	        	songMap.put(song, splitLine[1].split("\t"));
+	        	songMap.put(song, removeElements(artists));
+	        	
             }    
         }
         input.close();
-        
 
         logger.info("Dictionary build-up completed");
         
@@ -122,6 +91,8 @@ class RRMapper extends Mapper<LongWritable, WarcRecord, Text, LongWritable> {
 	    dictionaryChunkerFT = new ExactDictionaryChunker(dictionary,
                                      IndoEuropeanTokenizerFactory.INSTANCE,
                                      false,false);
+	    
+        dictionary = null;
 	    
         logger.info("ExactDictionaryChunker build-up completed");
 		
@@ -165,7 +136,8 @@ class RRMapper extends Mapper<LongWritable, WarcRecord, Text, LongWritable> {
 			                
 			                if(null != correspondingArtist && correspondingArtist.length>0){
 			                    for(String artist : correspondingArtist){
-			                    	if(warcContent.substring(Math.max(0,start-300),Math.min(end+300, warcContent.length())).contains(artist)){
+			                    	String contentSubstring = warcContent.substring(Math.max(0,start-300),start) + warcContent.substring(end, Math.min(end+300, warcContent.length()));
+			                    	if(null != contentSubstring && null != artist && contentSubstring.toLowerCase().contains(artist.toLowerCase())){
 			                    		String resultKey = recording+","+artist;
 			                    		
 			                    		context.getCounter(Counters.NUM_SONGS_DETECTED).increment(1);
@@ -187,4 +159,15 @@ class RRMapper extends Mapper<LongWritable, WarcRecord, Text, LongWritable> {
 			}
 		}
 	}
+	
+	public static String[] removeElements(String[] input) {
+	    List<String> result = new LinkedList<String>();
+
+	    for(String item : input)
+	        if(item.length()>1)
+	            result.add(item);
+
+	    return (String[]) result.toArray(input);
+	}
+
 }
