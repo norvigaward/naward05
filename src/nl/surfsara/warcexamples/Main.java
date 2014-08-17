@@ -21,8 +21,10 @@ import nl.naward04.hadoop.country.Country;
 import nl.naward05.hadoop.MergeFiles;
 import nl.naward05.hadoop.SumTool;
 import nl.naward05.hadoop.country.CountCountries;
+import nl.naward05.hadoop.country.IPTestTool;
 import nl.surfsara.warcexamples.hadoop.ldps.LDPS;
 import nl.surfsara.warcexamples.hadoop.rr.RR;
+import nl.surfsara.warcexamples.hadoop.test.TestTool;
 import nl.surfsara.warcexamples.hadoop.warc.Hrefs;
 import nl.surfsara.warcexamples.hadoop.wat.ServerType;
 import nl.surfsara.warcexamples.hadoop.wet.NER;
@@ -45,6 +47,8 @@ public class Main {
 		COUNTCOUNTRIES("countcountries", "Country counter."),
 		MERGE("merge", "Merge country and song files"),
 		SUM("sum", "Sum sequence file"),
+		TEST("test", "Test tool."),
+		IPTEST("iptest", "IP test tool."),
 		SERVERTYPE("servertype", "Extract server type from wat (metadata) files."),
 		HREF("href", "Extract links from http responses in warc (full crawl output) files."),
 		HEADERS("headers", "Dumps all headers from a file (this is not a mapreduce job).");
@@ -90,6 +94,10 @@ public class Main {
 				retval = ToolRunner.run(new Configuration(), new MergeFiles(), toolArgs);
 			} else if (Programs.SUM.getName().equals(tool)) {
 				retval = ToolRunner.run(new Configuration(), new SumTool(), toolArgs);
+			} else if (Programs.TEST.getName().equals(tool)) {
+				retval = ToolRunner.run(new Configuration(), new TestTool(), toolArgs);
+			} else if (Programs.IPTEST.getName().equals(tool)) {
+				retval = ToolRunner.run(new Configuration(), new IPTestTool(), toolArgs);
 			} else if (Programs.SERVERTYPE.getName().equals(tool)) {
 				retval = ToolRunner.run(new Configuration(), new ServerType(), toolArgs);
 			} else if (Programs.HREF.getName().equals(tool)) {
