@@ -20,6 +20,8 @@ public class MergeReducer extends Reducer<Text, Text, Text, LongWritable> {
 			String valueStr = val.toString();
 			if(valueStr.startsWith("COUNTRY#")) {
 				country = valueStr.substring(8);
+			} else {
+				songs.add(valueStr);
 			}
 		}
 		
