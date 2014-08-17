@@ -40,7 +40,7 @@ import org.jwat.common.Payload;
 import org.jwat.warc.WarcRecord;
 
 
-class RRMapper extends Mapper<LongWritable, WarcRecord, Text, LongWritable> {
+class RRMapper extends Mapper<LongWritable, WarcRecord, Text, Text> {
 	private static final Logger logger = Logger.getLogger(RRMapper.class);
 	
     private static final int CAPACITY = 10000000;
@@ -66,17 +66,17 @@ class RRMapper extends Mapper<LongWritable, WarcRecord, Text, LongWritable> {
 	    String song = "";  
 	    String line = "";
 	    
-	    String recordArtistListURL = "/nl/surfsara/warcexamples/hadoop/rr/resources/recording-artist-zonder-haakjes.txt";
+	    String recordArtistListURL = "/nl/surfsara/warcexamples/hadoop/rr/resources/recordartists.txt";
 
 	    BufferedReader input = new BufferedReader(new InputStreamReader(RRMapper.class.getResourceAsStream(recordArtistListURL)));
 	    
         while (null != (line = input.readLine())) {
-            String[] splitLine= line.split("\t",2);
-            song = splitLine[0];
+            String[] splitLine= line.split(";",2);
+            song = splitLine[0].trim();
             song = song.substring(0, Math.min(song.length(), 200));
-            if(song.length()>2){
+            if(song.length()>2 && !songMap.containsKey(song)){
             	
-	            dictionary.addEntry(new DictionaryEntry<String>(song.toLowerCase(),""));
+	            dictionary.addEntry(new DictionaryEntry<String>(song.toLowerCase(),song));
             	String[] artists = splitLine[1].split("\t");
 	            
 	        	songMap.put(song, removeElements(artists));
@@ -109,6 +109,8 @@ class RRMapper extends Mapper<LongWritable, WarcRecord, Text, LongWritable> {
 			Payload payload = value.getPayload();
 			
 			
+			
+			
 			if (payload == null) {
 				// NOP
 			} else {
@@ -136,17 +138,33 @@ class RRMapper extends Mapper<LongWritable, WarcRecord, Text, LongWritable> {
 			                
 			                if(null != correspondingArtist && correspondingArtist.length>0){
 			                    for(String artist : correspondingArtist){
+			                    	
 			                    	String contentSubstring = warcContent.substring(Math.max(0,start-300),start) + warcContent.substring(end, Math.min(end+300, warcContent.length()));
-			                    	if(null != contentSubstring && null != artist && contentSubstring.toLowerCase().contains(artist.toLowerCase())){
-			                    		String resultKey = recording+","+artist;
+			                    	
+			                    	// 
+			                    	// contentSubstring.toLowerCase().contains(artist.toLowerCase()
+			                    	// 		System.out.println(tmp.matches(".*\\bpro\\b.*"));
+			                    	if(null != contentSubstring && null != artist){
+			                    		if(contentSubstring.toLowerCase().contains(artist.toLowerCase())){
+			                    			
+			                    			contentSubstring = contentSubstring.toLowerCase().replaceAll("(\\r|\\n)", " ");
+			                    			
+			                    			if(contentSubstring.matches(".*\\b"+artist.toLowerCase()+"\\b.*")){
+				                    			String resultKey = type+";"+artist;
+					                    		
+					                    		context.getCounter(Counters.NUM_SONGS_DETECTED).increment(1);
+					                    		
+					                            if(!results.contains(resultKey)){
+//					                            	System.out.println(resultKey);
+					                            	results.add(resultKey);
+					                            	context.write(new Text(value.header.warcRefersToStr), new Text(resultKey));
+					                            } 
+			                    			} else {
+			                    				logger.info(artist+", "+contentSubstring);
+			                    			}
+
+			                    		}
 			                    		
-			                    		context.getCounter(Counters.NUM_SONGS_DETECTED).increment(1);
-			                    		
-			                            if(!results.contains(resultKey)){
-//			                            	System.out.println(resultKey);
-			                            	results.add(resultKey);
-			                            	context.write(new Text(resultKey), new LongWritable(1));
-			                            } 
 			                    	}
 			                    }
 			                }
