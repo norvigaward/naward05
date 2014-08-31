@@ -20,11 +20,11 @@ The research performed for the Norvig Award has resulted in a paper that will be
 
 
 
-#### Results.
+#### Results
 
-Show lists of several countries + original top2000.
+Below is the generated list of the top 15 most mentioned songs for a number of different countries.
 
-Give .csv with all results.
+After that, we give the combined top list of top 15 most mentioned songs and the top 15 of the original top2000.  
 
 NL
 
@@ -86,7 +86,7 @@ Vertigo					|U2         		|	3855
 Roar   					|Katy Perry 		|	3613
 Time   					|Pink Floyd 		|	3579
 
-Total
+Combined list of all countries.
 
 Song					| Artis            	| #Occurences
 ------------------------|-------------------|--------
@@ -127,6 +127,8 @@ November Rain                  |  Guns N' Roses
 One                            |  Metallica
 Viva La Vida                   |  Coldplay
 
-
+The complete set of result can be found in [this .csv file](results.csv)
 
 #### Discussion
+
+Because a large majority of the webpages (~80%) and also the most occurences are found in pages from the US. The US list has a large impact on the combined list of songs.
