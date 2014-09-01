@@ -10,6 +10,14 @@ but show that on a smaller set of songs, particular the Dutch top2000, the appro
 
 #### Introduction
 
+Making ordered lists of songs is a popular activity performed by both commercial institutes and individuals alike. 
+In the Netherlands there is an annual event called the [Top 2000](http://www.radio2.nl/top2000) were people are asked to submit their favorite songs that when combined created a ranked list of the top 2000 greatest songs of all time.
+
+It was this particular event that sparked our interest into how such a list of the "greatest songs of all time" would differentiate when created by people from different countries.
+As we are not aware of comparable lists in different countries, we wanted to investigate if it is possible to automatically build an equivalent list for a country by counting the mentionings of songs on web pages originating from a specific countries.
+
+For our research, we developed algorithm that is capable of detecting song mentionings within a given web page and an algorithm that finds the country of origin of a web page, so that by combining these results we gain an ranked
+list of songs for a number of different countries.
 
 #### Background
 
