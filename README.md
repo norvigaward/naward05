@@ -32,9 +32,10 @@ Overview Method
 
 #### Country detection
 
+To determine the country of origin of a web page we discussed several methods. A possible method would be language detection, but because this is processing intensive and languages don't map one-to-one to countries we decided to use another approach.
+In the end we settled for detection based on the TLD (top-level domain) of the web page and the origin of the IP as fallback. We argue the TLD is the most reliable, but some TLDs are not linked to a (single) country, like `.com` and `.eu`. In those cases we use the country of origin of the IP address of the server.
 
 #### Song mentioning detection
-
 
 We first decided that the dataset of songs that we should detect should be as complete as possible. We therefore used the music metadata encyclopedia [MusicBrainz](https://musicbrainz.org/) that contained around 13.5 million recordings at the time.
 For the mentioning detection, we decided to use the [LingPipe toolkit](http://alias-i.com/lingpipe/). This provided us with an implementation of the Aho-Corasick string matching algorithm that allowed us to find all song mentionings in a text in a linear amount of time.
@@ -43,7 +44,9 @@ To reduce the expected amount of false positives by only detecting song titles, 
 Unfortunatly, after initial testing we found that this set of songs contains a high number of songs with names and artists that are also often occuring in regular text, e.g. songs named "product" or "contact" that when metioned are not always references to the respective songs.
 Due to time limitations, we decided to reduce the amount of false positives by only using the top 2000 of 2013 as input for the algorithm.
 
-#### Combining the detectors.
+#### Combining the detectors
+
+To make our approach flexible we have used seperate jobs for country and song mentioning detection. The results are then combined using the UUID of the CommonCrawl records. This way we could use file input formats for the different detectors (`.wat` for country detection and `.wet` for song mentions) and already run our country detection before the song detection was finished.
 
 
 Results
