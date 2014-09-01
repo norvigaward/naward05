@@ -24,18 +24,18 @@ list of songs for a number of different countries.
 Background
 --------------------------
 
-The research performed for the Norvig Award has resulted in a paper that will be published as part of (todo, study tour, link naar paper).
+The research performed for the Norvig Award has resulted in a paper that will be published as part of the [Study Tour USB14.0](http://www.usb14.com/) preliminary report. (todo, study tour, link naar paper).
 
 
 Overview Method
 --------------------------
 
-#### Country detection
+### Country detection
 
 To determine the country of origin of a web page we discussed several methods. A possible method would be language detection, but because this is processing intensive and languages don't map one-to-one to countries we decided to use another approach.
 In the end we settled for detection based on the TLD (top-level domain) of the web page and the origin of the IP as fallback. We argue the TLD is the most reliable, but some TLDs are not linked to a (single) country, like `.com` and `.eu`. In those cases we use the country of origin of the IP address of the server.
 
-#### Song mentioning detection
+### Song mentioning detection
 
 We first decided that the dataset of songs that we should detect should be as complete as possible. We therefore used the music metadata encyclopedia [MusicBrainz](https://musicbrainz.org/) that contained around 13.5 million recordings at the time.
 For the mentioning detection, we decided to use the [LingPipe toolkit](http://alias-i.com/lingpipe/). This provided us with an implementation of the Aho-Corasick string matching algorithm that allowed us to find all song mentionings in a text in a linear amount of time.
@@ -44,7 +44,7 @@ To reduce the expected amount of false positives by only detecting song titles, 
 Unfortunatly, after initial testing we found that this set of songs contains a high number of songs with names and artists that are also often occuring in regular text, e.g. songs named "product" or "contact" that when metioned are not always references to the respective songs.
 Due to time limitations, we decided to reduce the amount of false positives by only using the top 2000 of 2013 as input for the algorithm.
 
-#### Combining the detectors
+### Combining the detectors
 
 To make our approach flexible we have used seperate jobs for country and song mentioning detection. The results are then combined using the UUID of the CommonCrawl records. This way we could use file input formats for the different detectors (`.wat` for country detection and `.wet` for song mentions) and already run our country detection before the song detection was finished.
 
@@ -52,10 +52,21 @@ To make our approach flexible we have used seperate jobs for country and song me
 Results
 --------------------------
 
-The result of the experiment is a generated list of songs, ordered on the amount of mentionings, for a large number of countries. As it is not feasible to show the entire result on this page, we show the top 15 most mentioned songs for small number of countries below. The complete result set can be found in [this .csv file](results.csv).
+### Country detection
+
+Although not the main focus of our research, the country detection on the entire CommonCrawl dataset already showed some interesting results.
+
+Only 7% of the countries could be determined by the TLD and by far most of counties are determined using the country of origin of the IP address (93%).
+
+Another interesting observation is that webpages from the United States (80%) are overrepresented and non-latin pages like from Russia are underreprsented in the CommonCrawl data.
 
 
-NL
+### Song mentioning detection
+
+The result of the main experiment is a generated list of songs, ordered on the amount of mentionings, for a large number of countries. As it is not feasible to show the entire result on this page, we show the top 15 most mentioned songs for small number of countries below. The complete result set can be found in [this .csv file](results.csv).
+
+
+#### The Netherlands (NL)
 
 Song					| Artis            	| #Occurences
 ------------------------|-------------------|--------
@@ -75,7 +86,7 @@ Story Of My Life		| One Direction		|	137
 Losing My Religion		| REM				|	135
 Thriller				| Michael Jackson 	|	104
 
-GB
+#### United Kingdom (GB)
 
 Song					| Artis            	| #Occurences
 ------------------------|-------------------|--------
@@ -95,7 +106,7 @@ Mamma Mia       |ABBA           |	126
 She Loves You   |The Beatles    |	125
 Biko            |Peter Gabriel  |	123
 
-US
+#### United States (US)
 
 Song					| Artis            	| #Occurences
 ------------------------|-------------------|--------
@@ -115,9 +126,9 @@ Vertigo					|U2         		|	3855
 Roar   					|Katy Perry 		|	3613
 Time   					|Pink Floyd 		|	3579
 
-For added context, we also show the combined top list of top 15 most mentioned songs and the top 15 of the original top2000.
+#### Combined list of all countries
 
-Combined list of all countries.
+For added context, we also show the combined top list of top 15 most mentioned songs and the top 15 of the original Top2000.
 
 Song					| Artis            	| #Occurences
 ------------------------|-------------------|--------
@@ -138,7 +149,7 @@ The Unforgettable Fire		|U2      			|	4463
 Someone Like You      		|Adele   			|	4394
 
 
-Original Top2000
+#### Original Top2000
 
 Song					| Artis            	
 ------------------------|-------------------
