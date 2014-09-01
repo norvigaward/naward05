@@ -22,9 +22,8 @@ The research performed for the Norvig Award has resulted in a paper that will be
 
 #### Results
 
-Below is the generated list of the top 15 most mentioned songs for a number of different countries.
+The result of the experiment is a generated list of songs, ordered on the amount of mentionings, for a large number of countries. As it is not feasible to show the entire result on this page, we show the top 15 most mentioned songs for small number of countries below. The complete result set can be found in [this .csv file](results.csv).
 
-After that, we give the combined top list of top 15 most mentioned songs and the top 15 of the original top2000.  
 
 NL
 
@@ -86,6 +85,8 @@ Vertigo					|U2         		|	3855
 Roar   					|Katy Perry 		|	3613
 Time   					|Pink Floyd 		|	3579
 
+For added context, we also show the combined top list of top 15 most mentioned songs and the top 15 of the original top2000.
+
 Combined list of all countries.
 
 Song					| Artis            	| #Occurences
@@ -127,8 +128,10 @@ November Rain                  |  Guns N' Roses
 One                            |  Metallica
 Viva La Vida                   |  Coldplay
 
-The complete set of result can be found in [this .csv file](results.csv)
 
 #### Discussion
 
-Because a large majority of the webpages (~80%) and also the most occurences are found in pages from the US. The US list has a large impact on the combined list of songs.
+Because a large majority of the webpages (~80%) is from the US, and also the most occurences are found in pages from the US. The US list has a large impact on the combined list of songs.
+
+We believe that it is interesting to see that The Beatles scores very high in the GB list, while american artists such as Bruno Mars, Robin Thicke and Pink score high in the US list.
+
