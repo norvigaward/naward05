@@ -1,14 +1,16 @@
 Song mentioning detection on the Common Crawl dataset
 ============
 
-#### Abstract
+Abstract
+--------------------------
 
 We investigated the possibility of automatically developing lists of popular songs for different countries by detecting song mentionings in the Common Crawl dataset.
 We found that that it is possible to efficiently determine the country of a web page and that is is possible to efficiently find mentionings of a large number of songs
 titles (5.7 million) within these web pages. We find however that our current implementation is not sufficient as the amount of false positive song mention detections is too high,
 but show that on a smaller set of songs, particular the Dutch top2000, the approach produces interesting reshuffeling of this list for different countries.
 
-#### Introduction
+Introduction
+--------------------------
 
 Making ordered lists of songs is a popular activity performed by both commercial institutes and individuals alike. 
 In the Netherlands there is an annual event called the [Top 2000](http://www.radio2.nl/top2000) were people are asked to submit their favorite songs that when combined created a ranked list of the top 2000 greatest songs of all time.
@@ -19,18 +21,20 @@ As we are not aware of comparable lists in different countries, we wanted to inv
 For our research, we developed algorithm that is capable of detecting song mentionings within a given web page and an algorithm that finds the country of origin of a web page, so that by combining these results we gain an ranked
 list of songs for a number of different countries.
 
-#### Background
+Background
+--------------------------
 
 The research performed for the Norvig Award has resulted in a paper that will be published as part of (todo, study tour, link naar paper).
 
 
-#### Overview Method
-
-Country detection
+Overview Method
 --------------------------
 
-Song mentioning detection
---------------------------
+#### Country detection
+
+
+#### Song mentioning detection
+
 
 We first decided that the dataset of songs that we should detect should be as complete as possible. We therefore used the music metadata encyclopedia [MusicBrainz](https://musicbrainz.org/) that contained around 13.5 million recordings at the time.
 For the mentioning detection, we decided to use the [LingPipe toolkit] http://alias-i.com/lingpipe/. This provided us with an implementation of the Aho-Corasick string matching algorithm that allowed us to find all song mentionings in a text in a linear amount of time.
@@ -39,10 +43,11 @@ To reduce the expected amount of false positives by only detecting song titles, 
 Unfortunatly, after initial testing we found that this set of songs contains a high number of songs with names and artists that are also often occuring in regular text, e.g. songs named "product" or "contact" that when metioned are not always references to the respective songs.
 Due to time limitations, we decided to reduce the amount of false positives by only using the top 2000 of 2013 as input for the algorithm.
 
-Combining the detectors.
---------------------------
+#### Combining the detectors.
 
-#### Results
+
+Results
+--------------------------
 
 The result of the experiment is a generated list of songs, ordered on the amount of mentionings, for a large number of countries. As it is not feasible to show the entire result on this page, we show the top 15 most mentioned songs for small number of countries below. The complete result set can be found in [this .csv file](results.csv).
 
@@ -151,7 +156,8 @@ One                            |  Metallica
 Viva La Vida                   |  Coldplay
 
 
-#### Discussion
+Discussion
+--------------------------
 
 Because a large majority of the webpages (~80%) is from the US, and also the most occurences are found in pages from the US. The US list has a large impact on the combined list of songs.
 
