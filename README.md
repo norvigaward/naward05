@@ -26,7 +26,21 @@ The research performed for the Norvig Award has resulted in a paper that will be
 
 #### Overview Method
 
+Country detection
+--------------------------
 
+Song mentioning detection
+--------------------------
+
+We first decided that the dataset of songs that we should detect should be as complete as possible. We therefore used the music metadata encyclopedia [MusicBrainz](https://musicbrainz.org/) that contained around 13.5 million recordings at the time.
+For the mentioning detection, we decided to use the [LingPipe toolkit] http://alias-i.com/lingpipe/. This provided us with an implementation of the Aho-Corasick string matching algorithm that allowed us to find all song mentionings in a text in a linear amount of time.
+To reduce the expected amount of false positives by only detecting song titles, we added the requirement that the artist of the song should be mentioned in the text surrounding the song mentioning.
+
+Unfortunatly, after initial testing we found that this set of songs contains a high number of songs with names and artists that are also often occuring in regular text, e.g. songs named "product" or "contact" that when metioned are not always references to the respective songs.
+Due to time limitations, we decided to reduce the amount of false positives by only using the top 2000 of 2013 as input for the algorithm.
+
+Combining the detectors.
+--------------------------
 
 #### Results
 
