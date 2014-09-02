@@ -24,7 +24,7 @@ list of songs for a number of different countries.
 Background
 --------------------------
 
-The research performed for the Norvig Award has resulted in a paper that will be published as part of the [Study Tour USB14.0](http://www.usb14.com/) preliminary report. (todo, study tour, link naar paper).
+The research performed for the Norvig Award has resulted in a paper that will be published as part of the [Study Tour USB14.0](http://www.usb14.com/) preliminary report.
 
 
 Overview Method
